@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Next.js
+lead-scoring-app/.next/
+lead-scoring-app/out/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Claude
+.claude/
