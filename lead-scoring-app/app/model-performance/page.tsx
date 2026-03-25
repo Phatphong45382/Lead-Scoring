@@ -12,7 +12,21 @@ import { ActualVsPredicted } from "@/components/model-performance/actual-vs-pred
 import { ErrorDistribution } from "@/components/model-performance/error-distribution"
 import { DriftMonitor } from "@/components/model-performance/drift-monitor"
 import { RetrainingHistory } from "@/components/model-performance/retraining-history"
+import { MonitorHealthKPIs } from "@/components/model-performance/monitor-health-kpis"
+import { FeatureDriftHeatmap } from "@/components/model-performance/feature-drift-heatmap"
+import { DriftTimelineChart } from "@/components/model-performance/drift-timeline-chart"
+import { PredictionDistributionShift } from "@/components/model-performance/prediction-distribution-shift"
+import { RetrainRecommendation } from "@/components/model-performance/retrain-recommendation"
+import { DataQualityChart } from "@/components/model-performance/data-quality-chart"
 import { mockModelPerformanceData } from "@/lib/mock-data-model-performance"
+import {
+  mockMonitorKPIs,
+  mockFeatureDriftHeatmap,
+  mockDriftTimeline,
+  mockPredictionDistribution,
+  mockRetrainRecommendations,
+  mockDataQualityTrend,
+} from "@/lib/mock-data-monitoring"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Activity, Radar } from "lucide-react"
 
@@ -43,17 +57,44 @@ export default function ModelPerformancePage() {
 
         <DashboardUpdatedBanner />
 
-        <Tabs defaultValue="performance">
+        <Tabs defaultValue="monitor">
           <TabsList variant="line">
+            <TabsTrigger value="monitor" className="gap-1.5">
+              <Radar className="w-4 h-4" />
+              Monitor & Drift
+            </TabsTrigger>
             <TabsTrigger value="performance" className="gap-1.5">
               <Activity className="w-4 h-4" />
               Performance
             </TabsTrigger>
-            <TabsTrigger value="monitor" className="gap-1.5">
-              <Radar className="w-4 h-4" />
-              Monitor
-            </TabsTrigger>
           </TabsList>
+
+          {/* ── Monitor Tab (now the hero tab) ── */}
+          <TabsContent value="monitor" className="space-y-6 mt-6">
+            {/* Row 0: Health KPIs */}
+            <MonitorHealthKPIs kpis={mockMonitorKPIs} />
+
+            {/* Row 1: Retrain Recommendation (full width — the star) */}
+            <RetrainRecommendation recommendations={mockRetrainRecommendations} />
+
+            {/* Row 2: Drift Timeline + Data Quality */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <DriftTimelineChart data={mockDriftTimeline} />
+              <DataQualityChart data={mockDataQualityTrend} />
+            </div>
+
+            {/* Row 3: Feature Drift Heatmap (full width — visual wow) */}
+            <FeatureDriftHeatmap data={mockFeatureDriftHeatmap} />
+
+            {/* Row 4: Prediction Distribution Shift + Drift Event Log */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <PredictionDistributionShift data={mockPredictionDistribution} />
+              <DriftMonitor events={driftEvents} />
+            </div>
+
+            {/* Row 5: Retraining History (full width) */}
+            <RetrainingHistory records={retrainingHistory} />
+          </TabsContent>
 
           {/* ── Performance Tab ── */}
           <TabsContent value="performance" className="space-y-6 mt-6">
@@ -99,14 +140,6 @@ export default function ModelPerformancePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
               <ScoreDistribution data={scoreDistribution} />
               <ErrorDistribution data={errorDistribution} />
-            </div>
-          </TabsContent>
-
-          {/* ── Monitor Tab ── */}
-          <TabsContent value="monitor" className="space-y-6 mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-              <DriftMonitor events={driftEvents} />
-              <RetrainingHistory records={retrainingHistory} />
             </div>
           </TabsContent>
         </Tabs>
